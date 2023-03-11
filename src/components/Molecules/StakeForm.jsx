@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { erc20ABI, useAccount, useContractRead, useContractWrite, usePrepareContractWrite } from "wagmi";
+import { erc20ABI, useAccount, useContractRead, useContractWrite, usePrepareContractWrite, useWaitForTransaction } from "wagmi";
 import stakingABI from '../../utils/abi/StakingABI.json'
 
 
@@ -41,10 +41,23 @@ export const StakeForm = () => {
             _contractAddress, tokenAmount
         ],
     });
+
+ 
+
+
+
     const { data: stakeTokenData, isLoading: stakeTokenIsLoading, write: stakeToken } = useContractWrite(stakeConfig)
 
-    const { data: approveTokenData, isLoading: approveTokenIsLoading, write: approve } = useContractWrite(approveConfig)
+    const { data: approveTokenData, isLoading: approveTokenIsLoading, isSuccess: approveIsSuccess, write: approve } = useContractWrite(approveConfig)
 
+    // const waitForTransaction = useWaitForTransaction({
+    //     hash: approve.data?.hash,
+
+    //     onSuccess(data) {
+    //         console.log("success ", data);
+    //         stakeToken?.();
+    //     }
+    // });
 
 
     const handleSubmit = (e) => {
@@ -55,6 +68,7 @@ export const StakeForm = () => {
     const handleApprove = (e) => {
         e.preventDefault()
         approve?.()
+
     }
 
 
